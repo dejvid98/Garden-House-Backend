@@ -34,6 +34,7 @@ exports.registerFarmer = async (req, res) => {
 
         if (doesExist) throw new Error(`Username is already taken!`);
 
+        // Hashing password before inserting it into DB
         const salt = await bcrypt.genSalt(4);
 
         const hashedPassword = await bcrypt.hash(password, salt);
@@ -62,10 +63,29 @@ exports.registerFarmer = async (req, res) => {
             email,
         ])
 
-        res.send({
-            message: "Farmer successfully registered!",
-            success: true
+        const payload = {
+            user: {
+                firstname,
+                lastname,
+                username,
+                birthday,
+                birthlocation,
+                phonenumber,
+                email,
+            }
+        }
+
+        jwt.sign(payload, 'secertToken', (err, token) => {
+            if (err) throw new Error(err)
+
+            res.send({
+                message: "Farmer successfully registered!",
+                token,
+                success: true
+            })
         })
+
+
 
     } catch (err) {
         res.send({
@@ -92,6 +112,7 @@ exports.registerFirm = async (req, res) => {
 
         if (doesExist) throw new Error('Name is already taken!');
 
+        // Hashing password before inserting it into DB
         const salt = await bcrypt.genSalt(4);
 
         const hashedPassword = await bcrypt.hash(password, salt);
@@ -115,10 +136,26 @@ exports.registerFirm = async (req, res) => {
             location,
             email,
         ])
+        
+        const payload = {
+            user: {
+                fullname,
+                shortname,
+                foundeddate,
+                hashedPassword,
+                location,
+                email,
+            }
+        }
 
-        res.send({
-            message: "Firm successfully registered!",
-            success: true
+        jwt.sign(payload, 'secertToken', (err, token) => {
+            if (err) throw new Error(err)
+
+            res.send({
+                message: "Firm successfully registered!",
+                token,
+                success: true
+            })
         })
 
     } catch (err) {
