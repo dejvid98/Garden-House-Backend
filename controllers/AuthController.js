@@ -4,9 +4,9 @@ const db = require('../db');
 
 const isNameTaken = async (query, value) => {
     try {
-        const resp = await db.query(query, [value]);
+        const result = await db.query(query, [...value]);
 
-        if (resp.rowCount !== 0) return true;
+        if (result.rowCount !== 0) return true;
 
         return false;
 
@@ -15,7 +15,7 @@ const isNameTaken = async (query, value) => {
     }
 }
 
-exports.registerFarmer = async (req, res) => {
+exports.registerUser = async (req, res) => {
     try {
         const {
             firstname,
@@ -28,18 +28,24 @@ exports.registerFarmer = async (req, res) => {
             email,
         } = req.body
 
-        const checkQuery = 'SELECT * FROM farmer where username = $1'
+        const checkQuery = `SELECT * FROM userprofile where (email = $1) OR (username = $2)`
 
-        const doesExist = await isNameTaken(checkQuery, username);
+        const doesExist = await isNameTaken(checkQuery, [email, username]);
 
-        if (doesExist) throw new Error(`Username is already taken!`);
+        if (doesExist) {
+            res.send({
+                message: "Email/Username already exist!",
+                success: false
+            })
+            return;
+        };
 
         // Hashing password before inserting it into DB
         const salt = await bcrypt.genSalt(4);
 
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const stringQuery = `INSERT INTO farmer
+        const stringQuery = `INSERT INTO userprofile
             (
                 firstname,
                 lastname,
@@ -79,7 +85,7 @@ exports.registerFarmer = async (req, res) => {
             if (err) throw new Error(err)
 
             res.send({
-                message: "Farmer successfully registered!",
+                message: "User successfully registered!",
                 token,
                 success: true
             })
@@ -106,11 +112,17 @@ exports.registerFirm = async (req, res) => {
             email,
         } = req.body
 
-        const checkQuery = 'SELECT * FROM firm where shortname = $1';
+        const checkQuery = 'SELECT * FROM firm where (shortname = $1) OR (email = $2)';
 
-        const doesExist = await isNameTaken(checkQuery, shortname);
+        const doesExist = await isNameTaken(checkQuery, [shortname, email]);
 
-        if (doesExist) throw new Error('Name is already taken!');
+        if (doesExist) {
+            res.send({
+                message: "Email/Name already exist!",
+                success: false
+            })
+            return;
+        };
 
         // Hashing password before inserting it into DB
         const salt = await bcrypt.genSalt(4);
@@ -136,13 +148,12 @@ exports.registerFirm = async (req, res) => {
             location,
             email,
         ])
-        
+
         const payload = {
             user: {
                 fullname,
                 shortname,
                 foundeddate,
-                hashedPassword,
                 location,
                 email,
             }
@@ -158,6 +169,108 @@ exports.registerFirm = async (req, res) => {
             })
         })
 
+    } catch (err) {
+        res.send({
+            message: err.message,
+            success: false
+        })
+    }
+}
+
+exports.loginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body
+
+        const loginQuery = 'SELECT * FROM "user" where email = $1'
+
+        const result = await db.query(loginQuery, [email]);
+
+        if (result.rowCount === 0) {
+            res.send(({
+                message: 'Email does not exist!',
+                success: false
+            }))
+            return;
+        };
+
+        const user = { ...result.rows[0] }
+
+        bcrypt.compare(password, user.password, (err, result) => {
+            if (err) throw new Error(err);
+
+            if (!result) {
+                res.send({
+                    message: "Invalid password!",
+                    success: false
+                })
+                return;
+            };
+
+            delete user.password
+
+            jwt.sign(user, 'secertToken', (err, token) => {
+                if (err) throw new Error(err)
+
+                res.send({
+                    message: "Successful login!",
+                    token,
+                    success: true
+                })
+            })
+        }
+
+        )
+    } catch (err) {
+        res.send({
+            message: err.message,
+            success: false
+        })
+    }
+}
+
+exports.loginFirm = async (req, res) => {
+    try {
+        const { email, password } = req.body
+
+        const loginQuery = 'SELECT * FROM firm where email = $1'
+
+        const result = await db.query(loginQuery, [email]);
+
+        if (result.rowCount === 0) {
+            res.send(({
+                message: 'Email does not exist!',
+                success: false
+            }))
+            return;
+        };
+
+        const user = { ...result.rows[0] }
+
+        bcrypt.compare(password, user.password, (err, result) => {
+            if (err) throw new Error(err);
+
+            if (!result) {
+                res.send({
+                    message: "Invalid password!",
+                    success: false
+                })
+                return;
+            };
+
+            delete user.password
+
+            jwt.sign(user, 'secertToken', (err, token) => {
+                if (err) throw new Error(err)
+
+                res.send({
+                    message: "Successful login!",
+                    token,
+                    success: true
+                })
+            })
+        }
+
+        )
     } catch (err) {
         res.send({
             message: err.message,
