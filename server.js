@@ -1,18 +1,21 @@
-const express = require('express')
-const cors = require('cors')
-const auth = require('./routes/AuthRoute')
-require('dotenv').config()
+const express = require('express');
+const cors = require('cors');
+const login = require('./routes/LoginRoute');
+const register = require('./routes/RegisterRoute');
+require('dotenv').config();
 
-const app = express()
+const app = express();
 
-app.use(cors())
+app.use(cors());
 
-app.use(express.json())
+app.use(express.json());
 
-app.use('/api/auth', auth)
+app.use('/login', login);
 
-const port = process.env.PORT || 3000
+app.use('/register', register);
+
+const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
-    console.log('Server is running!')
-})
+  console.log('Server is running!');
+});
