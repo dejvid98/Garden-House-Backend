@@ -3,17 +3,15 @@ const bcrypt = require('bcrypt');
 
 exports.changePasswordUser = async (req, res) => {
   try {
-    const {email, password, newPassword} = req.body;
+    const {email, password, newpassword} = req.body;
 
-    const query = 'SELECT * from user where email = $1';
+    const query = 'SELECT * from userprofile where email = $1';
 
     const result = await db.query(query, [email]);
 
     const user = {...result.rows[0]};
 
-    bcrypt.compare(password, user.password, (err, result) => {
-      if (err) throw new Error(err);
-
+    bcrypt.compare(password, user.password).then(result => {
       if (!result) {
         res.send({
           status: false,
@@ -21,34 +19,30 @@ exports.changePasswordUser = async (req, res) => {
         });
         return;
       }
-    });
 
-    bcrypt.compare(newPassword, user.password, (err, result) => {
-      if (err) throw new Error(err);
+      bcrypt.compare(newpassword, user.password).then(async result => {
+        if (result) {
+          res.send({
+            status: false,
+            message: 'New password is same as current!',
+          });
+          return;
+        }
 
-      if (result) {
+        const salt = await bcrypt.genSalt(4);
+
+        const newHashedPassword = await bcrypt.hash(newpassword, salt);
+
+        const query2 = 'UPDATE userprofile SET password = $1 where email = $2';
+
+        db.query(query2, [newHashedPassword, email]);
+
         res.send({
-          status: false,
-          message: 'New password is same as current!',
+          status: true,
+          message: 'Password successfuly changed!',
         });
-        return;
-      }
+      });
     });
-
-    const salt = await bcrypt.genSalt(4);
-
-    const newHashedPassword = await bcrypt.hash(newPassword, salt);
-
-    const query2 = 'UPDATE user SET password = $1 where email = $2';
-
-    db.query(query2, [newHashedPassword, email]);
-
-    res.send({
-      status: true,
-      message: 'Password successfuly changed!',
-    });
-
-    const query2 = 'UPDATE user SET ';
   } catch (err) {
     res.send(err.message);
   }
@@ -56,7 +50,7 @@ exports.changePasswordUser = async (req, res) => {
 
 exports.changePasswordFirm = async (req, res) => {
   try {
-    const {email, password, newPassword} = req.body;
+    const {email, password, newpassword} = req.body;
 
     const query = 'SELECT * from firm where email = $1';
 
@@ -64,9 +58,7 @@ exports.changePasswordFirm = async (req, res) => {
 
     const user = {...result.rows[0]};
 
-    bcrypt.compare(password, user.password, (err, result) => {
-      if (err) throw new Error(err);
-
+    bcrypt.compare(password, user.password).then(result => {
       if (!result) {
         res.send({
           status: false,
@@ -74,34 +66,30 @@ exports.changePasswordFirm = async (req, res) => {
         });
         return;
       }
-    });
 
-    bcrypt.compare(newPassword, user.password, (err, result) => {
-      if (err) throw new Error(err);
+      bcrypt.compare(newpassword, user.password).then(async result => {
+        if (result) {
+          res.send({
+            status: false,
+            message: 'New password is same as current!',
+          });
+          return;
+        }
 
-      if (result) {
+        const salt = await bcrypt.genSalt(4);
+
+        const newHashedPassword = await bcrypt.hash(newpassword, salt);
+
+        const query2 = 'UPDATE firm SET password = $1 where email = $2';
+
+        db.query(query2, [newHashedPassword, email]);
+
         res.send({
-          status: false,
-          message: 'New password is same as current!',
+          status: true,
+          message: 'Password successfuly changed!',
         });
-        return;
-      }
+      });
     });
-
-    const salt = await bcrypt.genSalt(4);
-
-    const newHashedPassword = await bcrypt.hash(newPassword, salt);
-
-    const query2 = 'UPDATE user SET password = $1 where email = $2';
-
-    db.query(query2, [newHashedPassword, email]);
-
-    res.send({
-      status: true,
-      message: 'Password successfuly changed!',
-    });
-
-    const query2 = 'UPDATE user SET ';
   } catch (err) {
     res.send(err.message);
   }

@@ -15,7 +15,7 @@ app.use('/login', login);
 
 app.use('/register', register);
 
-app.use('/passwordchange',passwordChange);
+app.use('/changepassword',passwordChange);
 
 const port = process.env.PORT || 3000;
 

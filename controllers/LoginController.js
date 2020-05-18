@@ -6,7 +6,7 @@ exports.loginUser = async (req, res) => {
   try {
     const {email, password} = req.body;
 
-    const loginQuery = 'SELECT * FROM "user" where email = $1';
+    const loginQuery = 'SELECT * FROM userprofile where email = $1';
 
     const result = await db.query(loginQuery, [email]);
 
