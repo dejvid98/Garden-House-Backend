@@ -34,7 +34,7 @@ exports.registerUser = async (req, res) => {
     if (doesExist) {
       res.send({
         message: 'Email/Username already exist!',
-        success: false,
+        status: false,
       });
       return;
     }
@@ -86,13 +86,13 @@ exports.registerUser = async (req, res) => {
       res.send({
         message: 'User successfully registered!',
         token,
-        success: true,
+        status: true,
       });
     });
   } catch (err) {
     res.send({
       message: err.message,
-      success: 'false',
+      status: 'false',
     });
   }
 };
@@ -116,7 +116,7 @@ exports.registerFirm = async (req, res) => {
     if (doesExist) {
       res.send({
         message: 'Email/Name already exist!',
-        success: false,
+        status: false,
       });
       return;
     }
@@ -162,15 +162,13 @@ exports.registerFirm = async (req, res) => {
       res.send({
         message: 'Firm successfully registered!',
         token,
-        success: true,
+        status: true,
       });
     });
   } catch (err) {
     res.send({
       message: err.message,
-      success: false,
+      status: false,
     });
   }
 };
-
-

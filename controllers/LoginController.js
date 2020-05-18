@@ -13,7 +13,7 @@ exports.loginUser = async (req, res) => {
     if (result.rowCount === 0) {
       res.send({
         message: 'Email does not exist!',
-        success: false,
+        status: false,
       });
       return;
     }
@@ -26,7 +26,7 @@ exports.loginUser = async (req, res) => {
       if (!result) {
         res.send({
           message: 'Invalid password!',
-          success: false,
+          status: false,
         });
         return;
       }
@@ -39,14 +39,14 @@ exports.loginUser = async (req, res) => {
         res.send({
           message: 'Successful login!',
           token,
-          success: true,
+          status: true,
         });
       });
     });
   } catch (err) {
     res.send({
       message: err.message,
-      success: false,
+      status: false,
     });
   }
 };
@@ -62,7 +62,7 @@ exports.loginFirm = async (req, res) => {
     if (result.rowCount === 0) {
       res.send({
         message: 'Email does not exist!',
-        success: false,
+        status: false,
       });
       return;
     }
@@ -75,7 +75,7 @@ exports.loginFirm = async (req, res) => {
       if (!result) {
         res.send({
           message: 'Invalid password!',
-          success: false,
+          status: false,
         });
         return;
       }
@@ -88,14 +88,14 @@ exports.loginFirm = async (req, res) => {
         res.send({
           message: 'Successful login!',
           token,
-          success: true,
+          status: true,
         });
       });
     });
   } catch (err) {
     res.send({
       message: err.message,
-      success: false,
+      status: false,
     });
   }
 };
