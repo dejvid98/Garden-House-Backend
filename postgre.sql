@@ -20,3 +20,14 @@ CREATE TABLE firm(
 	location VARCHAR(50) NOT NULL,
 	email varchar(50) NOT NULL UNIQUE
 );
+
+CREATE TABLE nursery(
+	id SERIAL,
+	length INT NOT NULL,
+	width INT NOT NULL,
+	name VARCHAR(100) NOT NULL,
+	address VARCHAR(100) NOT NULL,
+	waterlevel INT DEFAULT 200,
+	temeprature INT DEFAULT 18,
+	owneremail VARCHAR(100) NOT NULL
+)
