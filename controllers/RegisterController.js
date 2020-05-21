@@ -55,9 +55,9 @@ exports.registerUser = async (req, res) => {
                 phonenumber,
                 email
             ) 
-            values ($1,$2,$3,$4,$5,$6,$7,$8)`;
+            values ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING ID`;
 
-    await db.query(stringQuery, [
+    const response = await db.query(stringQuery, [
       firstname,
       lastname,
       username,
@@ -77,6 +77,7 @@ exports.registerUser = async (req, res) => {
         birthlocation,
         phonenumber,
         email,
+        id: response.rows[0].id,
       },
     };
 
@@ -135,9 +136,9 @@ exports.registerFirm = async (req, res) => {
                 location,
                 email
             ) 
-            values ($1,$2,$3,$4,$5,$6)`;
+            values ($1,$2,$3,$4,$5,$6) RETURNING id`;
 
-    await db.query(stringQuery, [
+    const response = await db.query(stringQuery, [
       fullname,
       shortname,
       foundeddate,
@@ -153,6 +154,7 @@ exports.registerFirm = async (req, res) => {
         foundeddate,
         location,
         email,
+        id: response.rows[0].id,
       },
     };
 
