@@ -19,7 +19,8 @@ CREATE TABLE firm(
 	password TEXT NOT NULL,
 	foundeddate DATE NOT NULL,
 	location VARCHAR(50) NOT NULL,
-	email varchar(50) NOT NULL UNIQUE
+	email varchar(50) NOT NULL UNIQUE,
+	courier INT DEFAULT 5
 );
 
 CREATE TABLE nursery(
@@ -32,46 +33,59 @@ CREATE TABLE nursery(
 	temeprature INT DEFAULT 18,
 	owneremail VARCHAR(100) NOT NULL,
 	FOREIGN KEY (owneremail) REFERENCES userprofile (email)
-)
+);
 
 CREATE TABLE seedling(
-	id SERIAL UNIQUE PRIMARY KEY,
+	id SERIAL UNIQUE,
 	name VARCHAR(50) NOT NULL,
 	is_planted boolean default false,
 	planted_date DATE NOT NULL,
 	harvest_ready boolean default false,
 	harvest_date DATE,
-	nursery_id INT,
-	owner_id INT,
-	FOREIGN KEY (nursery_id) REFERENCES nursery(id),
-	FOREIGN KEY (owner_id) REFERENCES userprofile(id)
-)
+	nursery_id INT REFERENCES nursery(id),
+	owner_id INT  REFERENCES userprofile(id),
+	PRIMARY KEY(id,nursery_id,owner_id)
+);
 
 CREATE TABLE fertilizer(
 	id SERIAL UNIQUE PRIMARY KEY,
 	name VARCHAR(100) NOT NULL,
 	firm VARCHAR(100) NOT NULL,
+	speedup_time INT,
 	owner_id INT,
 	FOREIGN KEY (owner_id) REFERENCES userprofile(id)
-)
+);
 
 CREATE TABLE shopitem(
 	id SERIAL UNIQUE PRIMARY KEY,
 	name VARCHAR(100) NOT NULL,
-	firm VARCHAR(100) NOT NULL,
+	firm INT NOT NULL,
 	type VARCHAR(20) NOT NULL,
-	FOREIGN KEY (firm) REFERENCES firm(fullname)
-)
+	FOREIGN KEY (firm) REFERENCES firm(id)
+);
 
-CREATE TABLE ratings(
-	id SERIAL UNIQUE PRIMARY KEY,
-	username VARCHAR(100) NOT NULL,
+CREATE TABLE rating(
+	id SERIAL UNIQUE,
+	username VARCHAR(100) NOT NULL REFERENCES userprofile(username),
+	product INT NOT NULL REFERENCES shopitem(id),
 	rating INT NOT NULL,
-	FOREIGN KEY (username) REFERENCES userprofile(username)
-)
+	PRIMARY KEY(id,username,product)
+);
 
-CREATE TABLE oderders(
+CREATE TABLE comment(
+	id SERIAL UNIQUE,
+	username VARCHAR(100) NOT NULL REFERENCES userprofile(username),
+	product INT NOT NULL REFERENCES shopitem(id),
+	comment TEXT NOT NULL,
+	PRIMARY KEY(id,username,product)
+);
+
+CREATE TABLE orders(
 	id SERIAL UNIQUE PRIMARY KEY,
 	orderedAt DATE NOT NULL,
 	is_acepted BOOLEAN,
-)
+	status VARCHAR(20) DEFAULT 'pending',
+	quantity INT,
+	item_id INT,
+	FOREIGN KEY (item_id) REFERENCES shopitem(id)
+);
