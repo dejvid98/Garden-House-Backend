@@ -42,9 +42,9 @@ CREATE TABLE seedling(
 	id SERIAL UNIQUE,
 	name VARCHAR(50) NOT NULL,
 	is_planted boolean default false,
-	planted_date DATE,
+	planted_date timestamp,
 	harvest_ready boolean default false,
-	harvest_date DATE,
+	harvest_date timestamp,
 	nursery_id INT REFERENCES nursery(id),
 	owner_id INT  REFERENCES userprofile(id),
 	PRIMARY KEY(id,nursery_id,owner_id)
@@ -109,5 +109,5 @@ CREATE TABLE courier(
 	firm_id INT NOT NULL REFERENCES firm(id),
 	is_busy BOOLEAN DEFAULT false,
 	order_id INT REFERENCES orders(id),
-	delivery_time DATE
+	delivery_time timestamp
 );

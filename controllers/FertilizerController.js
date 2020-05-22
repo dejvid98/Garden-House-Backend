@@ -1,4 +1,5 @@
 const db = require('../db');
+const moment = require('moment');
 
 exports.createFertilizer = async (req, res) => {
   try {
@@ -25,13 +26,55 @@ exports.createFertilizer = async (req, res) => {
   }
 };
 
+// Uses a fertilizer and reduces time for harvest on
+// selected plant
 exports.useFertilizer = async (req, res) => {
-  const {id, seedling} = req.body;
-  const fertilizerQuery = 'SELECT * FROM fertilizer WHERE id = $1';
-  const fertilizerResult = await db.query(fertilizerQuery, [id]);
+  try {
+    const {id, seedling} = req.body;
 
-  res.send({
-    stastus: true,
-    data: fertilizerResult.rows[0],
-  });
+    const fertilizerQuery = 'SELECT * FROM fertilizer WHERE id = $1';
+
+    const fertilizerResult = await db.query(fertilizerQuery, [id]);
+
+    const resultDeconstructed = {...fertilizerResult.rows[0]};
+    
+    if (Object.keys(resultDeconstructed).length == 0) {
+      res.send({status: false, message: 'Fertilizer not found!'});
+      return;
+    }
+
+    const speedUpTime = resultDeconstructed.speedup_time;
+
+    const seedlingQuery = `SELECT * FROM seedling where id = $1`;
+
+    const seedlingResult = await db.query(seedlingQuery, [seedling]);
+
+    const seedlingDeconstructed = {...seedlingResult.rows[0]};
+
+    const harvestDate = seedlingDeconstructed.harvest_date;
+
+    const newHarvestDate = moment(harvestDate)
+      .subtract(speedUpTime, 'days')
+      .format();
+
+    const updateSeedlingQuery = `UPDATE seedling
+                                 SET harvest_date = $1
+                                 WHERE id = $2`;
+
+    await db.query(updateSeedlingQuery, [newHarvestDate, seedling]);
+
+    const deleteFertilizerQuery = 'DELETE FROM fertilizer where id = $1';
+
+    await db.query(deleteFertilizerQuery, [id]);
+
+    res.send({
+      stastus: true,
+      data: `Harvest date succesffuly reduced by ${speedUpTime}`,
+    });
+  } catch (err) {
+    res.send({
+      stastus: false,
+      message: err.message,
+    });
+  }
 };
