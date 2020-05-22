@@ -12,7 +12,6 @@ const db = require('../db');
   setInterval(decreaseLevels, 3600 * 1000);
 })();
 
-// Retrieves all nurseries
 exports.getUserNurseries = async (req, res) => {
   try {
     const {email} = req.body;
@@ -30,20 +29,33 @@ exports.getUserNurseries = async (req, res) => {
   }
 };
 
-// Inserts a new nursery
 exports.addNursery = async (req, res) => {
   try {
     const {owneremail, length, width, name, address} = req.body;
+
+    const calculateAvailableSpace = (length, width) => {
+      return length * width;
+    };
+
+    const availableSpace = calculateAvailableSpace(length, width);
 
     const query = `INSERT INTO nursery (
                     owneremail,
                     length,
                     width,
+                    available_space,
                     name,
                     address) 
-                    values($1, $2, $3, $4, $5)`;
+                    values($1, $2, $3, $4, $5, $6)`;
 
-    await db.query(query, [owneremail, length, width, name, address]);
+    await db.query(query, [
+      owneremail,
+      length,
+      width,
+      availableSpace,
+      name,
+      address,
+    ]);
 
     res.send({status: true, message: 'Nursery successfully added!'});
   } catch (err) {

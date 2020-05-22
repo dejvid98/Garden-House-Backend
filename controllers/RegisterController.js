@@ -147,6 +147,18 @@ exports.registerFirm = async (req, res) => {
       email,
     ]);
 
+    const courierArray = [1, 2, 3, 4, 5];
+
+    const createCouriers = async () => {
+      const courierQuery = 'INSERT INTO courier(firm_id) values($1)';
+      const firmId = await response.rows[0].id;
+      await db.query(courierQuery, [firmId]);
+    };
+
+    courierArray.forEach(() => {
+      createCouriers();
+    });
+
     const payload = {
       user: {
         fullname,

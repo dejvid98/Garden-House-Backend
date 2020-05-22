@@ -1,4 +1,4 @@
-drop table userprofile,firm,nursery,seedling,fertilizer,shopitem,rating,comment,orders,orderitem;
+drop table userprofile,firm,nursery,seedling,fertilizer,shopitem,rating,comment,orders,orderitem,courier;
 
 CREATE TABLE userprofile (
 	id SERIAL UNIQUE PRIMARY KEY,
@@ -22,8 +22,7 @@ CREATE TABLE firm(
 	password TEXT NOT NULL,
 	foundeddate DATE NOT NULL,
 	location VARCHAR(50) NOT NULL,
-	email varchar(50) NOT NULL UNIQUE,
-	courier INT DEFAULT 5
+	email varchar(50) NOT NULL UNIQUE
 );
 
 CREATE TABLE nursery(
@@ -32,6 +31,7 @@ CREATE TABLE nursery(
 	width INT NOT NULL,
 	name VARCHAR(100) NOT NULL,
 	address VARCHAR(100) NOT NULL,
+	available_space INT NOT NULL,
 	waterlevel INT DEFAULT 200,
 	temeprature INT DEFAULT 18,
 	owneremail VARCHAR(100) NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE seedling(
 	id SERIAL UNIQUE,
 	name VARCHAR(50) NOT NULL,
 	is_planted boolean default false,
-	planted_date DATE NOT NULL,
+	planted_date DATE,
 	harvest_ready boolean default false,
 	harvest_date DATE,
 	nursery_id INT REFERENCES nursery(id),
@@ -53,7 +53,7 @@ CREATE TABLE seedling(
 CREATE TABLE fertilizer(
 	id SERIAL UNIQUE PRIMARY KEY,
 	name VARCHAR(100) NOT NULL,
-	firm VARCHAR(100) NOT NULL,
+	firm VARCHAR(100) NOT NULL REFERENCES firm(shortname),
 	speedup_time INT,
 	owner_id INT,
 	FOREIGN KEY (owner_id) REFERENCES userprofile(id)
@@ -64,6 +64,7 @@ CREATE TABLE shopitem(
 	name VARCHAR(100) NOT NULL,
 	firm INT NOT NULL,
 	type VARCHAR(20) NOT NULL,
+	speedup_time INT,
 	FOREIGN KEY (firm) REFERENCES firm(id)
 );
 
@@ -87,15 +88,26 @@ CREATE TABLE comment(
 
 CREATE TABLE orders(
 	id SERIAL UNIQUE PRIMARY KEY,
+	buyer_id INT REFERENCES userprofile(id),
 	is_acepted BOOLEAN,
 	status VARCHAR(20) DEFAULT 'pending',
 	created_at TIMESTAMP DEFAULT now(),
-	quantity INT,
 	item_id INT,
 	FOREIGN KEY (item_id) REFERENCES shopitem(id)
 );
 
 CREATE TABLE orderitem(
 	id SERIAL UNIQUE PRIMARY KEY,
+	created_at TIMESTAMP DEFAULT now(),
+	shopitem_id INT NOT NULL REFERENCES shopitem(id),
+	quantity INT DEFAULT 1,
+	order_id INT NOT NULL REFERENCES orders(id)
+);
 
-)
+CREATE TABLE courier(
+	id SERIAL UNIQUE PRIMARY KEY,
+	firm_id INT NOT NULL REFERENCES firm(id),
+	is_busy BOOLEAN DEFAULT false,
+	order_id INT REFERENCES orders(id),
+	delivery_time DATE
+);

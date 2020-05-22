@@ -4,6 +4,7 @@ const login = require('./routes/LoginRoute');
 const register = require('./routes/RegisterRoute');
 const nursery = require('./routes/NurseryRoute');
 const passwordChange = require('./routes/PasswordChangeRoute');
+const fertilizer = require('./routes/FertilizerRoute')
 require('dotenv').config();
 
 const app = express();
@@ -19,6 +20,8 @@ app.use('/register', register);
 app.use('/changepassword', passwordChange);
 
 app.use('/nursery', nursery);
+
+app.use('/fertilizer', fertilizer);
 
 const port = process.env.PORT || 3000;
 
