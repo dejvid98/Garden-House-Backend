@@ -1,8 +1,11 @@
+drop table userprofile,firm,nursery,seedling,fertilizer,shopitem,rating,comment,orders,orderitem;
+
 CREATE TABLE userprofile (
 	id SERIAL UNIQUE PRIMARY KEY,
 	firstname VARCHAR(30) NOT NULL,
 	lastname VARCHAR(30) NOT NULL,
 	username VARCHAR(30) NOT NULL UNIQUE,
+	created_at TIMESTAMP,
 	password TEXT NOT NULL,
 	birthday DATE NOT NULL,
 	birthlocation VARCHAR(50) NOT NULL,
@@ -89,3 +92,8 @@ CREATE TABLE orders(
 	item_id INT,
 	FOREIGN KEY (item_id) REFERENCES shopitem(id)
 );
+
+CREATE TABLE orderitem(
+	id SERIAL UNIQUE PRIMARY KEY,
+
+)
