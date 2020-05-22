@@ -5,7 +5,7 @@ CREATE TABLE userprofile (
 	firstname VARCHAR(30) NOT NULL,
 	lastname VARCHAR(30) NOT NULL,
 	username VARCHAR(30) NOT NULL UNIQUE,
-	created_at TIMESTAMP,
+	created_at TIMESTAMP DEFAULT now(),
 	password TEXT NOT NULL,
 	birthday DATE NOT NULL,
 	birthlocation VARCHAR(50) NOT NULL,
@@ -70,6 +70,7 @@ CREATE TABLE shopitem(
 CREATE TABLE rating(
 	id SERIAL UNIQUE,
 	username VARCHAR(100) NOT NULL REFERENCES userprofile(username),
+	created_at TIMESTAMP DEFAULT now(),
 	product INT NOT NULL REFERENCES shopitem(id),
 	rating INT NOT NULL,
 	PRIMARY KEY(id,username,product)
@@ -79,15 +80,16 @@ CREATE TABLE comment(
 	id SERIAL UNIQUE,
 	username VARCHAR(100) NOT NULL REFERENCES userprofile(username),
 	product INT NOT NULL REFERENCES shopitem(id),
+	created_at TIMESTAMP DEFAULT now(),
 	comment TEXT NOT NULL,
 	PRIMARY KEY(id,username,product)
 );
 
 CREATE TABLE orders(
 	id SERIAL UNIQUE PRIMARY KEY,
-	orderedAt DATE NOT NULL,
 	is_acepted BOOLEAN,
 	status VARCHAR(20) DEFAULT 'pending',
+	created_at TIMESTAMP DEFAULT now(),
 	quantity INT,
 	item_id INT,
 	FOREIGN KEY (item_id) REFERENCES shopitem(id)
