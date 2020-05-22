@@ -37,7 +37,7 @@ exports.useFertilizer = async (req, res) => {
     const fertilizerResult = await db.query(fertilizerQuery, [id]);
 
     const resultDeconstructed = {...fertilizerResult.rows[0]};
-    
+
     if (Object.keys(resultDeconstructed).length == 0) {
       res.send({status: false, message: 'Fertilizer not found!'});
       return;
@@ -56,12 +56,21 @@ exports.useFertilizer = async (req, res) => {
     const newHarvestDate = moment(harvestDate)
       .subtract(speedUpTime, 'days')
       .format();
+    let updateSeedlingQuery;
 
-    const updateSeedlingQuery = `UPDATE seedling
+    if (moment(newHarvestDate) <= moment()) {
+      updateSeedlingQuery = `UPDATE seedling
+                                 SET harvest_date = $1,
+                                     harvest_ready = true
+                                 WHERE id = $2`;
+      await db.query(updateSeedlingQuery, [moment().format(), seedling]);
+    } else {
+      updateSeedlingQuery = `UPDATE seedling
                                  SET harvest_date = $1
                                  WHERE id = $2`;
 
-    await db.query(updateSeedlingQuery, [newHarvestDate, seedling]);
+      await db.query(updateSeedlingQuery, [newHarvestDate, seedling]);
+    }
 
     const deleteFertilizerQuery = 'DELETE FROM fertilizer where id = $1';
 

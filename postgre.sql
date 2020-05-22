@@ -45,6 +45,7 @@ CREATE TABLE seedling(
 	planted_date timestamp,
 	harvest_ready boolean default false,
 	harvest_date timestamp,
+	transplant_date timestamp,
 	nursery_id INT REFERENCES nursery(id),
 	owner_id INT  REFERENCES userprofile(id),
 	PRIMARY KEY(id,nursery_id,owner_id)

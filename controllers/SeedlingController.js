@@ -115,16 +115,31 @@ exports.harvestSeedling = async (req, res) => {
       });
       return;
     }
+    const transplantDate = moment().add(1, 'day').format();
 
-    const harvestQuery = 'DELETE FROM seedling WHERE id = $1';
+    const setTransplantDateQuery = `UPDATE seedling
+                                    SET transplant_date = $1
+                                    WHERE id = $2`;
+    await db.query(setTransplantDateQuery, [transplantDate, id]);
 
-    await db.query(harvestQuery, [id]);
+    const deleteSeedling = async () => {
+      const harvestQuery = 'DELETE FROM seedling WHERE id = $1';
 
-    const nurseryQuery = `UPDATE nursery 
-                         SET available_spots = available_spots + 1 
+      await db.query(harvestQuery, [id]);
+
+      const nurseryQuery = `UPDATE nursery 
+                         SET available_space = available_space + 1 
                          WHERE id = $1`;
 
-    await db.query(nurseryQuery, [nurseryid]);
+      await db.query(nurseryQuery, [nurseryid]);
+    };
+
+    setTimeout(deleteSeedling, 24 * 3600 * 1000);
+
+    res.send({
+      status: true,
+      message: 'Seedling will be transplanted within 24 hours!',
+    });
   } catch (err) {
     res.send({
       status: false,
