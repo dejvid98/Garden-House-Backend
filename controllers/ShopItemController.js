@@ -4,7 +4,7 @@ exports.createShopItem = async (req, res) => {
   try {
     const {name, firm, type, quantity} = req.body;
 
-    const shopItemQuery = `INSERT INTO shopitem (name, firm, type, quantitiy)
+    const shopItemQuery = `INSERT INTO shopitem (name, firm, type, quantity)
                                     values ($1, $2, $3, $4)`;
 
     await db.query(shopItemQuery, [name, firm, type, quantity]);

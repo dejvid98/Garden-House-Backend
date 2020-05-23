@@ -72,7 +72,7 @@ CREATE TABLE shopitem(
 	firm INT NOT NULL REFERENCES firm(id),
 	type VARCHAR(20) NOT NULL,
 	speedup_time INT,
-	quantitiy INT,
+	quantity INT,
 	photo_url TEXT,
 	PRIMARY KEY (id,firm)
 );
