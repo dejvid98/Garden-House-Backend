@@ -7,6 +7,7 @@ const db = require('../db');
     const query = `UPDATE nursery 
        SET waterlevel = waterlevel - 1, 
        temeprature = temeprature - 1`;
+
     db.query(query);
   };
   setInterval(decreaseLevels, 3600 * 1000);
