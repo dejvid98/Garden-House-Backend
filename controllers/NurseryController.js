@@ -100,3 +100,7 @@ exports.setWaterLevel = async (req, res) => {
     });
   }
 };
+
+exports.getSeedlings = async (req,res) =>{
+  
+}

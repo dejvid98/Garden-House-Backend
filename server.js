@@ -4,8 +4,9 @@ const login = require('./routes/LoginRoute');
 const register = require('./routes/RegisterRoute');
 const nursery = require('./routes/NurseryRoute');
 const passwordChange = require('./routes/PasswordChangeRoute');
-const fertilizer = require('./routes/FertilizerRoute')
+const fertilizer = require('./routes/FertilizerRoute');
 const seedling = require('./routes/SeedlingRoute');
+const warehouse = require('./routes/WarehouseRoute');
 require('dotenv').config();
 
 const app = express();
@@ -25,6 +26,8 @@ app.use('/nursery', nursery);
 app.use('/fertilizer', fertilizer);
 
 app.use('/seedling', seedling);
+
+app.use('/warehouse', warehouse);
 
 const port = process.env.PORT || 3000;
 

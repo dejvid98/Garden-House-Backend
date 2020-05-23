@@ -3,15 +3,14 @@ const moment = require('moment');
 
 exports.createSeedling = async (req, res) => {
   try {
-    const {name, ownerid, warehouse_id} = req.body;
+    const {name, warehouse_id} = req.body;
 
     const seedlingQuery = `INSERT INTO seedling(
                             name,
-                            owner_id,
                             warehouse_id)
-                        values($1, $2, $3)`;
+                        values($1, $2)`;
 
-    await db.query(seedlingQuery, [name, ownerid, warehouse_id]);
+    await db.query(seedlingQuery, [name, warehouse_id]);
 
     res.send({
       status: true,

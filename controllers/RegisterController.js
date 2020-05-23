@@ -55,7 +55,7 @@ exports.registerUser = async (req, res) => {
                 phonenumber,
                 email
                             ) 
-            values ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING ID`;
+            values ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING ID`;
 
     const response = await db.query(stringQuery, [
       firstname,
@@ -68,13 +68,13 @@ exports.registerUser = async (req, res) => {
       email,
     ]);
 
+    const ownerID = response.rows[0].id;
+
     const warehouseQuery = `INSERT INTO warehouse(owner_id) values ($1) RETURNING ID`;
 
-    const warehouse = await db.query(warehouseQuery, [response.rows[0].id]);
+    const warehouse = await db.query(warehouseQuery, [ownerID]);
 
-    const warehouseId = {...warehouse.rows[0].id};
-
-    console.log(warehouseId);
+    const warehouseId = warehouse.rows[0].id;
 
     const payload = {
       user: {

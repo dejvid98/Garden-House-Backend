@@ -54,7 +54,7 @@ CREATE TABLE seedling(
 	transplant_date timestamp,
 	nursery_id INT REFERENCES nursery(id),
 	warehouse_id INT  REFERENCES warehouse(id),
-	PRIMARY KEY(id,nursery_id,warehouse_id)
+	PRIMARY KEY(id,warehouse_id)
 );
 
 CREATE TABLE fertilizer(
@@ -73,6 +73,7 @@ CREATE TABLE shopitem(
 	type VARCHAR(20) NOT NULL,
 	speedup_time INT,
 	quantitiy INT,
+	photo_url TEXT,
 	PRIMARY KEY (id,firm)
 );
 
@@ -119,5 +120,5 @@ CREATE TABLE courier(
 	is_busy BOOLEAN DEFAULT false,
 	order_id INT REFERENCES orders(id),
 	delivery_time timestamp,
-	PRIMARY KEY (id,firm_id,order_id)
+	PRIMARY KEY (id,firm_id)
 );

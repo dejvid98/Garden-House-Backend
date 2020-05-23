@@ -3,16 +3,16 @@ const moment = require('moment');
 
 exports.createFertilizer = async (req, res) => {
   try {
-    const {name, firm, speeduptime, ownerid} = req.body;
+    const {name, firm, speeduptime, warehouseid} = req.body;
 
     const fertilizerQuery = `INSERT INTO fertilizer(
                                 name,
                                 firm,
                                 speedup_time,
-                                owner_id)
+                                warehouse_id)
                                 values ($1,$2,$3,$4)`;
 
-    await db.query(fertilizerQuery, [name, firm, speeduptime, ownerid]);
+    await db.query(fertilizerQuery, [name, firm, speeduptime, warehouseid]);
 
     res.send({
       stastus: true,
