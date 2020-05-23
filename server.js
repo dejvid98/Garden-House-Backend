@@ -7,6 +7,7 @@ const passwordChange = require('./routes/PasswordChangeRoute');
 const fertilizer = require('./routes/FertilizerRoute');
 const seedling = require('./routes/SeedlingRoute');
 const warehouse = require('./routes/WarehouseRoute');
+const order = require('./routes/OrderRoute')
 require('dotenv').config();
 
 const app = express();
@@ -28,6 +29,8 @@ app.use('/fertilizer', fertilizer);
 app.use('/seedling', seedling);
 
 app.use('/warehouse', warehouse);
+
+app.use('/order', order);
 
 const port = process.env.PORT || 3000;
 

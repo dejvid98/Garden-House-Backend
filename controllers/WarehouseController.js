@@ -4,27 +4,41 @@ exports.getAllItems = async (req, res) => {
   try {
     const {id} = req.body;
 
-    const fertilizerQuery = `SELECT * FROM fertilizer WHERE warehouse_id = $1`;
+    let fertilizerQuery = `SELECT * FROM fertilizer WHERE warehouse_id = $1`;
 
-    const fertilizers = await db.query(fertilizerQuery, [id]);
-
-    const seedlingQuery = `SELECT * from seedling WHERE warehouse_id = $1 AND 
+    let seedlingQuery = `SELECT * from seedling WHERE warehouse_id = $1 AND 
                                                         is_planted = false`;
 
-    const seedlings = await db.query(seedlingQuery, [id]);
+    const data = {};
 
-    const fertilizersData = fertilizers.rows;
+    if (req.body.sort) {
+      fertilizerQuery += ` ORDER BY ${req.body.sort} ${req.body.order}`;
+      seedlingQuery += ` ORDER BY ${req.body.sort} ${req.body.order}`;
+    }
 
-    const seedlingsData = seedlings.rows;
+    if (req.body.fertilizers) {
+      const fertilizers = await db.query(fertilizerQuery, [id]);
+
+      const fertilizersData = fertilizers.rows;
+
+      data.fertilizers = fertilizersData;
+    }
+
+    if (req.body.seedlings) {
+      const seedlings = await db.query(seedlingQuery, [id]);
+
+      const seedlingsData = seedlings.rows;
+
+      data.seedlings = seedlingsData;
+    }
 
     res.send({
       status: true,
-      data: {
-        seedlings: seedlingsData,
-        fertilizers: fertilizersData,
-      },
+      data,
     });
   } catch (err) {
     res.send({status: false, message: err.message});
   }
 };
+
+exports.getItems = async (req, res) => {};

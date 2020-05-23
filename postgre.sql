@@ -100,9 +100,9 @@ CREATE TABLE orders(
 	buyer_id INT REFERENCES userprofile(id),
 	is_acepted BOOLEAN,
 	status VARCHAR(20) DEFAULT 'pending',
+	delivery_date DATE,
 	created_at TIMESTAMP DEFAULT now(),
-	item_id INT REFERENCES shopitem(id),
-	PRIMARY KEY (id,item_id,buyer_id)
+	PRIMARY KEY (id,buyer_id)
 );
 
 CREATE TABLE orderitem(
