@@ -36,7 +36,35 @@ exports.createOrder = async (req, res) => {
 // and decreases quantity of shopitem from the order
 exports.aceptOrder = async (req, res) => {
   try {
-    const {orderid} = req.body;
+    const {orderid, firm} = req.body;
+
+    const courierQuery = `SELECT * FROM courier WHERE firm_id = $1 AND is_busy = false`;
+
+    const courierResp = await db.query(courierQuery, [firm]);
+
+    if (courierResp.rows.length < 1) {
+      res.send({status: false, message: 'All couriers are currently busy!'});
+      return;
+    }
+
+    const courierBusyQuery = `UPDATE courier
+                              SET is_busy = true,
+                                  delivery_date = $1
+                              WHERE id = $2`;
+
+    await db.query(courierBusyQuery, [
+      moment().add(1, 'day'),
+      courierResp.rows[0].id,
+    ]);
+
+    // Make courier available after product is delivered
+    setTimeout(async () => {
+      const makeCourierAvailable = `UPDATE courier
+                                    SET is_busy = false,
+                                        delivery_date = null
+                                    WHERE id = $1`;
+      await db.query(makeCourierAvailable, [courierResp.rows[0].id]);
+    }, 24 * 3600 * 1000);
 
     const updateStatusQuery = `UPDATE orders
                                 SET status = 'shipping',
