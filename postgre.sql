@@ -100,7 +100,7 @@ CREATE TABLE orders(
 	buyer_id INT REFERENCES userprofile(id),
 	is_acepted BOOLEAN,
 	status VARCHAR(20) DEFAULT 'pending',
-	delivery_date DATE,
+	delivery_date timestamp,
 	created_at TIMESTAMP DEFAULT now(),
 	PRIMARY KEY (id,buyer_id)
 );
