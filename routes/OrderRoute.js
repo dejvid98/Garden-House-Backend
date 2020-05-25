@@ -4,7 +4,8 @@ const {
   createOrder,
   aceptOrder,
   declineOrder,
-  cancelOrder
+  cancelOrder,
+  getPendingOrders,
 } = require('../controllers/OrderController');
 
 router.route('/create').post(createOrder);
@@ -14,5 +15,7 @@ router.route('/acept').post(aceptOrder);
 router.route('/decline').post(declineOrder);
 
 router.route('/cancel').post(cancelOrder);
+
+router.route('/').get(getPendingOrders);
 
 module.exports = router;

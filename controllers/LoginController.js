@@ -31,6 +31,14 @@ exports.loginUser = async (req, res) => {
         return;
       }
 
+      if (user.isaccepted !== 'accepted') {
+        res.send({
+          status: false,
+          message: 'Administrator has not approved your account',
+        });
+        return;
+      }
+      
       delete user.password;
 
       jwt.sign(user, 'secertToken', (err, token) => {

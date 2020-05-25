@@ -5,9 +5,23 @@ exports.createOrder = async (req, res) => {
   try {
     const {buyer, items} = req.body;
 
-    const orderQuery = `INSERT INTO orders (buyer_id) values ($1) RETURNING id`;
+    const firmArray = [];
 
-    const order = await db.query(orderQuery, [buyer]);
+    const query = `SELECT * FROM shopitem 
+                   JOIN firm ON shopitem.firm = firm.id  
+                   WHERE shopitem.id = $1`;
+
+    await Promise.all(
+      items.map(async item => {
+        const result = await db.query(query, [item.shopitem_id]);
+        if (firmArray.includes(result.rows[0].shortname)) return;
+        firmArray.push(result.rows[0].shortname);
+      }),
+    );
+
+    const orderQuery = `INSERT INTO orders (buyer_id,firms) values ($1,$2) RETURNING id`;
+
+    const order = await db.query(orderQuery, [buyer, firmArray]);
 
     items.forEach(async item => {
       const itemQuery = `INSERT INTO orderitem (shopitem_id, quantity, order_id) 
@@ -149,6 +163,20 @@ exports.cancelOrder = async (req, res) => {
       status: true,
       message: 'Order cancled',
     });
+  } catch (err) {
+    res.send({status: false, message: err.message});
+  }
+};
+
+exports.getPendingOrders = async (req, res) => {
+  try {
+    const {name} = req.query;
+
+    const orderQuery = `SELECT * FROM orders WHERE $1=ANY(firms)`;
+
+    const result = await db.query(orderQuery, [name]);
+
+    res.send({status: true, data: result.rows});
   } catch (err) {
     res.send({status: false, message: err.message});
   }

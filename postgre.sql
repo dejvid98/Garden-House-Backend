@@ -102,6 +102,7 @@ CREATE TABLE orders(
 	status VARCHAR(20) DEFAULT 'pending',
 	delivery_date timestamp,
 	created_at TIMESTAMP DEFAULT now(),
+	firms VARCHAR(30) [],
 	PRIMARY KEY (id,buyer_id)
 );
 
