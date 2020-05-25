@@ -4,6 +4,17 @@ exports.createComment = async (req, res) => {
   try {
     const {id, user, comment} = req.body;
 
+    const checkIfItemPurchased = `SELECT * FROM orderitem
+                                  JOIN orders ON (orderitem.order_id = orders.id)
+                                  WHERE shopitem_id = $1 AND buyer_id = $2 AND is_acepted = true`;
+
+    const isPurchasedResult = await db.query(checkIfItemPurchased, [id, user]);
+
+    if (isPurchasedResult.rows.length < 1) {
+      res.send({status: false, message: 'You have not purchased this item'});
+      return;
+    }
+
     const checkIfCommentedQuery = `SELECT * FROM comment
                                     WHERE username = $1 AND product = $2`;
 

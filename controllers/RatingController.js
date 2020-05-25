@@ -41,3 +41,22 @@ exports.createRating = async (req, res) => {
     res.send({status: false, message: err.message});
   }
 };
+
+exports.getAvgRating = async (req, res) => {
+  try {
+    const {id} = req.query;
+
+    const ratingQuery = `SELECT AVG(rating) as average_rating FROM rating 
+                         WHERE product = $1 
+                         GROUP BY product`;
+
+    const result = await db.query(ratingQuery, [id]);
+
+    res.send({
+      status: true,
+      data: result.rows[0],
+    });
+  } catch (err) {
+    res.send({status: false, message: err.message});
+  }
+};
