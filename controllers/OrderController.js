@@ -86,3 +86,22 @@ exports.aceptOrder = async (req, res) => {
     res.send({status: false, message: err.message});
   }
 };
+
+exports.declineOrder = async (req, res) => {
+  try {
+    const {orderid} = req.body;
+
+    const updateStatusQuery = `UPDATE orders
+                                SET status = 'declined'
+                                WHERE id = $1`;
+
+    await db.query(updateStatusQuery, [orderid]);
+
+    res.send({
+      status: true,
+      message: 'Order declined',
+    });
+  } catch (err) {
+    res.send({status: false, message: err.message});
+  }
+};

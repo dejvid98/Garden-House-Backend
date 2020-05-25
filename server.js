@@ -9,6 +9,7 @@ const seedling = require('./routes/SeedlingRoute');
 const warehouse = require('./routes/WarehouseRoute');
 const order = require('./routes/OrderRoute');
 const shopitem = require('./routes/ShopItemRoute');
+const admin = require('./routes/AdminRoute');
 require('dotenv').config();
 
 const app = express();
@@ -34,6 +35,8 @@ app.use('/warehouse', warehouse);
 app.use('/order', order);
 
 app.use('/shopitem', shopitem);
+
+app.use('/admin', admin);
 
 const port = process.env.PORT || 3000;
 

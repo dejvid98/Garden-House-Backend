@@ -11,8 +11,8 @@ CREATE TABLE userprofile (
 	birthlocation VARCHAR(50) NOT NULL,
 	phonenumber varchar(20) NOT NULL,
 	email varchar(50) NOT NULL UNIQUE,
-	isAdmin BOOLEAN,
-	isAcepted BOOLEAN DEFAULT false
+	isAdmin BOOLEAN DEFAULT false,
+	isAccepted VARCHAR(20) DEFAULT 'pending'
 );
 
 CREATE TABLE firm(
