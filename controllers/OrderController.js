@@ -40,6 +40,7 @@ exports.aceptOrder = async (req, res) => {
 
     const updateStatusQuery = `UPDATE orders
                                 SET status = 'shipping',
+                                    is_acepted = true,
                                     delivery_date = $1
                                 WHERE id = $2`;
 

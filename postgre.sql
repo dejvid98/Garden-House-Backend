@@ -79,20 +79,20 @@ CREATE TABLE shopitem(
 
 CREATE TABLE rating(
 	id SERIAL UNIQUE,
-	username VARCHAR(100) NOT NULL REFERENCES userprofile(username),
+	username INT NOT NULL REFERENCES userprofile(id),
 	created_at TIMESTAMP DEFAULT now(),
 	product INT NOT NULL REFERENCES shopitem(id),
 	rating INT NOT NULL,
-	PRIMARY KEY(id,username,product)
+	PRIMARY KEY(id)
 );
 
 CREATE TABLE comment(
 	id SERIAL UNIQUE,
-	username VARCHAR(100) NOT NULL REFERENCES userprofile(username),
+	username INT NOT NULL REFERENCES userprofile(id),
 	product INT NOT NULL REFERENCES shopitem(id),
 	created_at TIMESTAMP DEFAULT now(),
 	comment TEXT NOT NULL,
-	PRIMARY KEY(id,username,product)
+	PRIMARY KEY(id)
 );
 
 CREATE TABLE orders(

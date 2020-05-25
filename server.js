@@ -10,6 +10,8 @@ const warehouse = require('./routes/WarehouseRoute');
 const order = require('./routes/OrderRoute');
 const shopitem = require('./routes/ShopItemRoute');
 const admin = require('./routes/AdminRoute');
+const comment = require('./routes/CommentRoute');
+const rating = require('./routes/RatingRoute');
 require('dotenv').config();
 
 const app = express();
@@ -37,6 +39,10 @@ app.use('/order', order);
 app.use('/shopitem', shopitem);
 
 app.use('/admin', admin);
+
+app.use('/comment', comment);
+
+app.use('/rating', rating);
 
 const port = process.env.PORT || 3000;
 
