@@ -105,3 +105,22 @@ exports.declineOrder = async (req, res) => {
     res.send({status: false, message: err.message});
   }
 };
+
+exports.cancelOrder = async (req, res) => {
+  try {
+    const {orderid} = req.body;
+
+    const updateStatusQuery = `UPDATE orders
+                                SET status = 'cancled'
+                                WHERE id = $1`;
+
+    await db.query(updateStatusQuery, [orderid]);
+
+    res.send({
+      status: true,
+      message: 'Order cancled',
+    });
+  } catch (err) {
+    res.send({status: false, message: err.message});
+  }
+};
