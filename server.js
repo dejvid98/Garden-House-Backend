@@ -47,7 +47,9 @@ app.use('/rating', rating);
 
 app.use('/courier', courier);
 
-const port = process.env.PORT || 3000;
+app.use(cors());
+
+const port = 3001;
 
 app.listen(port, () => {
   console.log('Server is running!');

@@ -3,7 +3,10 @@ const router = express.Router();
 const {
   acceptRegistration,
   declineRegistration,
+  getPendingRegistrations,
 } = require('../controllers/AdminController');
+
+router.route('/').get(getPendingRegistrations);
 
 router.route('/accept').post(acceptRegistration);
 

@@ -1,5 +1,20 @@
 const db = require('../db');
 
+exports.getPendingRegistrations = async (req, res) => {
+  try {
+    const query = `SELECT * FROM userprofile WHERE isaccepted = 'pending'`;
+
+    const result = await db.query(query);
+
+    res.send({
+      status: true,
+      data: result.rows,
+    });
+  } catch (err) {
+    res.send({status: false, message: err.message});
+  }
+};
+
 exports.acceptRegistration = async (req, res) => {
   try {
     const {id} = req.body;
