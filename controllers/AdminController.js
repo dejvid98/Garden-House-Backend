@@ -2,7 +2,7 @@ const db = require('../db');
 
 exports.getPendingRegistrations = async (req, res) => {
   try {
-    const query = `SELECT * FROM userprofile`;
+    const query = `SELECT * FROM userprofile ORDER BY created_at`;
 
     const result = await db.query(query);
 
@@ -18,7 +18,7 @@ exports.getPendingRegistrations = async (req, res) => {
 exports.getUserStatistics = async (req,res) =>{
     try {
       const query = `SELECT isaccepted,COUNT(isaccepted) FROM userprofile
-                            GROUP BY isaccepted`;
+                            GROUP BY isaccepted ORDER BY created_at`;
 
       const result = await db.query(query);
 
