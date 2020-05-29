@@ -15,6 +15,22 @@ exports.getPendingRegistrations = async (req, res) => {
   }
 };
 
+exports.getUserStatistics = async (req,res) =>{
+    try {
+      const query = `SELECT isaccepted,COUNT(isaccepted) FROM userprofile
+                            GROUP BY isaccepted`;
+
+      const result = await db.query(query);
+
+      res.send({
+        status: true,
+        data: result.rows,
+      });
+    } catch (err) {
+      res.send({status: false, message: err.message});
+    }
+}
+
 exports.acceptRegistration = async (req, res) => {
   try {
     const {id} = req.body;

@@ -4,9 +4,12 @@ const {
   acceptRegistration,
   declineRegistration,
   getPendingRegistrations,
+  getUserStatistics
 } = require('../controllers/AdminController');
 
 router.route('/').get(getPendingRegistrations);
+
+router.route('/stats').get(getUserStatistics);
 
 router.route('/accept').post(acceptRegistration);
 
