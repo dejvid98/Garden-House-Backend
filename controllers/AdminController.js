@@ -18,7 +18,7 @@ exports.getPendingRegistrations = async (req, res) => {
 exports.getUserStatistics = async (req,res) =>{
     try {
       const query = `SELECT isaccepted,COUNT(isaccepted) FROM userprofile
-                            GROUP BY isaccepted`;
+                            GROUP BY isaccepted DESC`;
 
       const result = await db.query(query);
 
