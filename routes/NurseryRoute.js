@@ -7,7 +7,7 @@ const {
   setWaterLevel,
 } = require('../controllers/NurseryController');
 
-router.route('/').get(getUserNurseries);
+router.route('/').post(getUserNurseries);
 
 router.route('/add').post(addNursery);
 

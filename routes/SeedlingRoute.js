@@ -11,7 +11,7 @@ router.route('/add').post(createSeedling);
 
 router.route('/plant').post(plantSeedling);
 
-router.route('/').get(getAvailableUserSeedlings);
+router.route('/').post(getAvailableUserSeedlings);
 
 router.route('/harvest').post(harvestSeedling);
 

@@ -11,8 +11,8 @@ router.route('/create').post(createShopItem);
 
 router.route('/delete').post(deleteShopItem);
 
-router.route('/').get(getAllShopItems);
+router.route('/').post(getAllShopItems);
 
-router.route('/firm').get(getFirmShopItems);
+router.route('/firm').post(getFirmShopItems);
 
 module.exports = router;

@@ -16,6 +16,6 @@ router.route('/decline').post(declineOrder);
 
 router.route('/cancel').post(cancelOrder);
 
-router.route('/').get(getPendingOrders);
+router.route('/').post(getPendingOrders);
 
 module.exports = router;

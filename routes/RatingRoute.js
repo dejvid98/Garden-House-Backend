@@ -4,6 +4,6 @@ const {createRating, getAvgRating} = require('../controllers/RatingController');
 
 router.route('/create').post(createRating);
 
-router.route('/').get(getAvgRating);
+router.route('/').post(getAvgRating);
 
 module.exports = router;
