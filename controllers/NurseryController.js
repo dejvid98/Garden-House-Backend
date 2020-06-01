@@ -21,7 +21,7 @@ exports.getUserNurseries = async (req, res) => {
 
     const result = await db.query(query, [email]);
 
-    res.send({status: true, data: result});
+    res.send({status: true, data: result.rows});
   } catch (err) {
     res.send({
       status: false,
@@ -101,6 +101,4 @@ exports.setWaterLevel = async (req, res) => {
   }
 };
 
-exports.getSeedlings = async (req,res) =>{
-  
-}
+exports.getSeedlings = async (req, res) => {};
