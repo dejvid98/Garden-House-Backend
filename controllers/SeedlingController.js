@@ -24,6 +24,26 @@ exports.createSeedling = async (req, res) => {
   }
 };
 
+exports.getNurserySeedlings = async (req, res) => {
+  try {
+    const {id} = req.body;
+
+    const query = `SELECT * FROM seedling 
+                    WHERE nursery_id = $1`;
+
+    const resp = await db.query(query, [id]);
+
+    const data = resp.rows;
+
+    res.send({
+      status: true,
+      data,
+    });
+  } catch (err) {
+    res.send({status: false, message: err.message});
+  }
+};
+
 exports.getAvailableUserSeedlings = async (req, res) => {
   try {
     const {id} = req.body;
