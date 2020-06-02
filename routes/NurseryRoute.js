@@ -5,9 +5,12 @@ const {
   addNursery,
   setTemeprature,
   setWaterLevel,
+  getNurseryById,
 } = require('../controllers/NurseryController');
 
 router.route('/').post(getUserNurseries);
+
+router.route('/id').post(getNurseryById);
 
 router.route('/add').post(addNursery);
 

@@ -6,18 +6,33 @@ const db = require('../db');
   const decreaseLevels = () => {
     const query = `UPDATE nursery 
        SET waterlevel = waterlevel - 1, 
-       temeprature = temeprature - 1`;
+       temeprature = temeprature - 1
+       WHERE waterlevel != 0 OR temeperature != -15`;
 
     db.query(query);
   };
   setInterval(decreaseLevels, 3600 * 1000);
 })();
 
+exports.getNurseryById = async (req, res) => {
+  try {
+    const {id} = req.body;
+    
+    const query = `SELECT * FROM nursery WHERE id = $1`;
+    
+    const data = db.query(query, [id]);
+
+    res.send({status: true, data});
+  } catch (err) {
+    res.send({status: false, message: err.message});
+  }
+};
+
 exports.getUserNurseries = async (req, res) => {
   try {
     const {email} = req.body;
 
-    const query = 'SELECT * from nursery where owneremail = $1';
+    const query = 'SELECT * FROM nursery WHERE owneremail = $1';
 
     const result = await db.query(query, [email]);
 
