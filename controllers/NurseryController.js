@@ -17,10 +17,10 @@ const db = require('../db');
 exports.getNurseryById = async (req, res) => {
   try {
     const {id} = req.body;
-    
+
     const query = `SELECT * FROM nursery WHERE id = $1`;
-    
-    const data = db.query(query, [id]);
+
+    const data = await db.query(query, [id]);
 
     res.send({status: true, data});
   } catch (err) {
