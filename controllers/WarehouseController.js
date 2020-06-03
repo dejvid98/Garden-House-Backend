@@ -51,11 +51,12 @@ exports.getSeedlings = async (req, res) => {
 
     const wareHouseId = resp.rows[0].id;
 
-    const seedlingQuery = `SELECT * FROM seedling WHERE warehouse_id = $1`;
+    const seedlingQuery = `SELECT name,COUNT(seedling.id) FROM seedling WHERE warehouse_id=$1 
+                            GROUP BY name;`;
 
     const data = await db.query(seedlingQuery, [wareHouseId]);
-    
-    res.send({status: true, data});
+
+    res.send({status: true, data:data.rows});
   } catch (err) {
     res.send({status: false, message: err.message});
   }
