@@ -64,46 +64,38 @@ exports.getAvailableUserSeedlings = async (req, res) => {
 
 exports.plantSeedling = async (req, res) => {
   try {
-    const {id, nurseryid} = req.body;
+    const {name, nurseryid, warehouse_id} = req.body;
 
     const plantedDate = moment();
 
     const harvestDate = moment().add(20, 'days');
 
-    const checkIfPlantedQuery = `SELECT * FROM seedling 
-                                 WHERE id = $1`;
+    const seedQuery = `SELECT * FROM seedling
+                        WHERE is_planted = false AND name = $1 AND warehouse_id = $2`;
 
-    const seedResult = await db.query(checkIfPlantedQuery, [id]);
+    const seeds = await db.query(seedQuery, [name, warehouse_id]);
 
-    const seedDeconcstured = {...seedResult.rows[0]};
+    const seedId = seeds.rows[0].id;
 
-    const isPlanted = seedDeconcstured.is_planted;
+    const seedlingQuery = `UPDATE seedling
+                           SET is_planted = true,
+                               planted_date = $1,
+                               harvest_date = $2,
+                               nursery_id = $3
+                           WHERE id=$4`;
 
-    if (isPlanted) {
-      res.send({status: false, message: 'Seedling already planted!'});
-      return;
-    }
+    await db.query(seedlingQuery, [
+      plantedDate,
+      harvestDate,
+      nurseryid,
+      seedId,
+    ]);
 
     const updateAvailableSpots = `UPDATE nursery
                                   SET available_space = available_space - 1
                                   WHERE id = $1`;
 
     await db.query(updateAvailableSpots, [nurseryid]);
-
-    const seedlingQuery = `UPDATE seedling
-                           SET is_planted = $1,
-                               planted_date = $2,
-                               harvest_date = $3,
-                               nursery_id = $4
-                           WHERE id = $5`;
-
-    await db.query(seedlingQuery, [
-      true,
-      plantedDate,
-      harvestDate,
-      nurseryid,
-      id,
-    ]);
 
     res.send({
       status: true,
