@@ -3,13 +3,17 @@ const db = require('../db');
 // Decreases levels of water and temeprature
 // every hour for all nurseries
 (() => {
-  const decreaseLevels = () => {
-    const query = `UPDATE nursery 
-       SET waterlevel = waterlevel - 1, 
-       temeprature = temeprature - 1
-       WHERE waterlevel != 0 OR temeperature != -15`;
+  const decreaseLevels = async () => {
+    const queryTemp = `UPDATE nursery 
+       SET temeprature = temeprature - 1
+       WHERE temeprature > -15`;
 
-    db.query(query);
+    const queryWater = `UPDATE nursery 
+       SET waterlevel = waterlevel - 1
+       WHERE waterlevel > 0`;
+
+    await db.query(queryTemp);
+    await db.query(queryWater);
   };
   setInterval(decreaseLevels, 3600 * 1000);
 })();
