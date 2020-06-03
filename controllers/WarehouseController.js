@@ -41,4 +41,22 @@ exports.getAllItems = async (req, res) => {
   }
 };
 
-exports.getItems = async (req, res) => {};
+exports.getSeedlings = async (req, res) => {
+  try {
+    const {id} = req.body;
+
+    const query = `SELECT * FROM warehouse WHERE owner_id = $1`;
+
+    const resp = await db.query(query, [id]);
+
+    const wareHouseId = resp.rows[0].id;
+
+    const seedlingQuery = `SELECT * FROM seedling WHERE warehouse_id = $1`;
+
+    const data = await db.query(seedlingQuery, [wareHouseId]);
+    
+    res.send({status: true, data});
+  } catch (err) {
+    res.send({status: false, message: err.message});
+  }
+};
