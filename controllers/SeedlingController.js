@@ -49,7 +49,7 @@ exports.getAvailableUserSeedlings = async (req, res) => {
     const {id} = req.body;
 
     const seedlingsQuery = `SELECT * FROM seedling 
-                          WHERE id = $1 AND is_planted=false`;
+                          WHERE nursery_id = $1 AND is_planted=false`;
 
     const result = await db.query(seedlingsQuery, [id]);
 
