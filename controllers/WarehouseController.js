@@ -5,7 +5,7 @@ exports.getAllItems = async (req, res) => {
     const {id} = req.body;
 
     let fertilizerQuery = `SELECT name, speedup_time, COUNT(name) FROM fertilizer 
-                          WHERE warehouse_id = 32
+                          WHERE warehouse_id = $1
                           GROUP BY name,speedup_time`;
 
     let seedlingQuery = `SELECT name,COUNT(name) FROM seedling 
