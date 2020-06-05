@@ -61,3 +61,17 @@ exports.getSeedlings = async (req, res) => {
     res.send({status: false, message: err.message});
   }
 };
+
+exports.findWarehouse = async (req, res) => {
+  try {
+    const {id} = req.body;
+
+    const query = `SELECT * FROM warehouse WHERE owner_id = $1`;
+
+    const resp = await db.query(query, [id]);
+
+    res.send({stats: true, data: resp.rows});
+  } catch (err) {
+    res.send({status: false, message: err.message});
+  }
+};
