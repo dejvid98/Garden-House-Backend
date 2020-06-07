@@ -172,7 +172,7 @@ exports.cancelOrder = async (req, res) => {
 
 exports.getPendingOrders = async (req, res) => {
   try {
-    const {name} = req.query;
+    const {name} = req.body;
 
     const orderQuery = `SELECT * FROM orders WHERE $1=ANY(firms)`;
 
@@ -186,7 +186,7 @@ exports.getPendingOrders = async (req, res) => {
 
 exports.getUserOrders = async (req, res) => {
   try {
-    const {id} = req.query;
+    const {id} = req.body;
 
     const orderQuery = `SELECT * FROM orders WHERE buyer_id = $1 ORDER BY created_at DESC`;
 
@@ -197,4 +197,3 @@ exports.getUserOrders = async (req, res) => {
     res.send({status: false, message: err.message});
   }
 };
-
