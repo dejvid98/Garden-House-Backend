@@ -14,7 +14,9 @@ exports.createOrder = async (req, res) => {
     await Promise.all(
       items.map(async item => {
         const result = await db.query(query, [item.shopitem_id]);
-        if (firmArray.includes(result.rows[0].shortname)) return;
+        if (firmArray.length > 0) {
+          if (firmArray.includes(result.rows[0].shortname)) return;
+        }
         firmArray.push(result.rows[0].shortname);
       }),
     );
@@ -181,3 +183,18 @@ exports.getPendingOrders = async (req, res) => {
     res.send({status: false, message: err.message});
   }
 };
+
+exports.getUserOrders = async (req, res) => {
+  try {
+    const {id} = req.query;
+
+    const orderQuery = `SELECT * FROM orders WHERE buyer_id = $1 ORDER BY created_at DESC`;
+
+    const result = await db.query(orderQuery, [id]);
+
+    res.send({status: true, data: result.rows});
+  } catch (err) {
+    res.send({status: false, message: err.message});
+  }
+};
+
