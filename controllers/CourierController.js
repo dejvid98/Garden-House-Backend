@@ -2,7 +2,7 @@ const db = require('../db');
 
 exports.getAvailableCouriers = async (req, res) => {
   try {
-    const {id} = req.query;
+    const {id} = req.body;
 
     const courierQuery = `SELECT * FROM courier 
                         WHERE firm_id = $1 AND is_busy = false`;
