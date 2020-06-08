@@ -65,7 +65,7 @@ exports.aceptOrder = async (req, res) => {
 
     const courierBusyQuery = `UPDATE courier
                               SET is_busy = true,
-                                  delivery_date = $1
+                                  delivery_time = $1
                               WHERE id = $2`;
 
     await db.query(courierBusyQuery, [
@@ -77,7 +77,7 @@ exports.aceptOrder = async (req, res) => {
     setTimeout(async () => {
       const makeCourierAvailable = `UPDATE courier
                                     SET is_busy = false,
-                                        delivery_date = null
+                                        delivery_time = null
                                     WHERE id = $1`;
       await db.query(makeCourierAvailable, [courierResp.rows[0].id]);
     }, 24 * 3600 * 1000);
