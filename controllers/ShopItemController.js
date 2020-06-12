@@ -2,12 +2,21 @@ const db = require('../db');
 
 exports.createShopItem = async (req, res) => {
   try {
-    const {name, firm, type, quantity} = req.body;
+    const {name, firm, type, quantity, speeduptime} = req.body;
 
-    const shopItemQuery = `INSERT INTO shopitem (name, firm, type, quantity)
+    let query;
+
+    if (speeduptime) {
+      query = `INSERT INTO shopitem (name, firm, type, quantity,speedup_time)
+                                    values ($1, $2, $3, $4, $5)`;
+
+      await db.query(query, [name, firm, type, quantity, speeduptime]);
+    } else {
+      query = `INSERT INTO shopitem (name, firm, type, quantity)
                                     values ($1, $2, $3, $4)`;
 
-    await db.query(shopItemQuery, [name, firm, type, quantity]);
+      await db.query(query, [name, firm, type, quantity]);
+    }
 
     res.send({
       status: true,
@@ -23,7 +32,7 @@ exports.deleteShopItem = async (req, res) => {
     const {id} = req.body;
 
     const shopItemQuery = `DELETE FROM shopitem WHERE id = $1`;
-
+    
     await db.query(shopItemQuery, [id]);
 
     res.send({
