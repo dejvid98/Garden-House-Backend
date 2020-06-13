@@ -1,3 +1,5 @@
+drop table courier,orderitem,orders,comment,rating,shopitem,fertilizer,seedling,warehouse,firm,nursery,userprofile;
+
 CREATE TABLE userprofile (
 	id SERIAL UNIQUE PRIMARY KEY,
 	firstname VARCHAR(30) NOT NULL,
