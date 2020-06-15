@@ -65,6 +65,27 @@ exports.getSeedlings = async (req, res) => {
   }
 };
 
+exports.getFertilizers = async (req, res) => {
+  try {
+    const {id} = req.body;
+
+    const query = `SELECT * FROM warehouse WHERE owner_id = $1`;
+
+    const resp = await db.query(query, [id]);
+
+    const wareHouseId = resp.rows[0].id;
+
+    const fertilizerQuery = `SELECT name,COUNT(fertilizer.id),warehouse_id FROM fertilizer WHERE warehouse_id=$1
+                            GROUP BY name,warehouse_id;`;
+
+    const data = await db.query(fertilizerQuery, [wareHouseId]);
+
+    res.send({status: true, data: data.rows});
+  } catch (err) {
+    res.send({status: false, message: err.message});
+  }
+};
+
 exports.findWarehouse = async (req, res) => {
   try {
     const {id} = req.body;
