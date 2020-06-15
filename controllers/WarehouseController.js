@@ -75,8 +75,8 @@ exports.getFertilizers = async (req, res) => {
 
     const wareHouseId = resp.rows[0].id;
 
-    const fertilizerQuery = `SELECT name,COUNT(fertilizer.id),warehouse_id FROM fertilizer WHERE warehouse_id=$1
-                            GROUP BY name,warehouse_id;`;
+    const fertilizerQuery = `SELECT name,COUNT(fertilizer.id),speedup_time,warehouse_id FROM fertilizer WHERE warehouse_id=$1
+                            GROUP BY name,warehouse_id,speedup_time;`;
 
     const data = await db.query(fertilizerQuery, [wareHouseId]);
 
